@@ -39,23 +39,44 @@ export default function AddToHomeScreen(props) {
 
   useEffect(initialize, []);
 
+  /**
+   * Initialization
+   *
+   * Install listeners to catch browser events. The browser events are
+   * automatically triggered once by the browser. We catch the events here and
+   * store a reference to those events in order to interact with them at a
+   * later point in time.
+   *
+   * Optionally, users of this component can catch the events themselves and
+   * provide the events to this component via 'props' (see
+   * `beforeInstallPromptEvent` and `appInstalledEvent`).
+   * This gives users more control of over this component (e.g. to render it at
+   * a later point in time). If one provides an event via 'props', the
+   * respective handler will not be installed by this component.
+   */
   function initialize() {
     if ('onbeforeinstallprompt' in window) {
       doLog('add beforeinstallprompt listener');
-      window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+      // If a 'beforeInstallPromptEvent' was provided via props, we re-use this
+      // event here instead of catching it ourselves.
+      if (props.beforeInstallPromptEvent) {
+        handleBeforeInstallPrompt(props.beforeInstallPromptEvent);
+      } else {
+        // No Event provided. Install a listener and catch it ourselves.
+        window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+      }
       showNativePrompt = true;
-
     }
-    if ('onappinstalled' in window) {
-      window.addEventListener('appinstalled', function (evt) {
-        doLog('A2HS installed');
-        session.added = true;
-        updateSession();
-        if (configuration.onInstall) {
-          configuration.onInstall.call(this);
-        }
-      });
 
+    if ('onappinstalled' in window) {
+      // If a 'appInstalledEvent' was provided via props, we re-use this event
+      // here instead of catching it ourselves.
+      if (props.appInstalledEvent) {
+        handleAppInstalledEvent(props.appInstalledEvent);
+      } else {
+        // No Event provided. Install a listener and catch it ourselves.
+        window.addEventListener('appinstalled', handleAppInstalledEvent);
+      }
     }
 
     checkPlatform();
@@ -82,6 +103,15 @@ export default function AddToHomeScreen(props) {
       afterServiceWorkerCheck({});
     }
 
+    // clean up any possibly installed listeners
+    return () => {
+      if (!props.beforeInstallPromptEvent) {
+        window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+      }
+      if (!props.appInstalledEvent) {
+        window.removeEventListener('appinstalled', handleAppInstalledEvent);
+      }
+    }
   }
 
   function buildConfiguration() {
@@ -298,6 +328,15 @@ export default function AddToHomeScreen(props) {
     doLog('capturing the native A2HS prompt');
     beforeInstallPromptEvent = event;
     delayedShow();
+  }
+
+  const handleAppInstalledEvent = () => {
+    doLog('A2HS installed');
+    session.added = true;
+    updateSession();
+    if (configuration.onInstall) {
+      configuration.onInstall.call(this);
+    }
   }
 
   function delayedShow() {
@@ -719,5 +758,24 @@ AddToHomeScreen.propTypes = {
     firefox: platformPropType,
     samsung: platformPropType,
     opera: platformPropType
-  })
+  }),
+  /**
+   * (Optional) Provide a BeforeInstallPromptEvent
+   * (https://developer.mozilla.org/en-US/docs/Web/API/BeforeInstallPromptEvent)
+   * which your app previously captured.
+   * 
+   * If omitted, the component installs listeners to capture this event.
+   * Note: This component must be rendered as soon as possible in order to
+   * capture the event.
+   */
+  beforeInstallPromptEvent: PropTypes.shape({}),
+  /**
+   * (Optional) Provide an AppInstalledEvent which your app previously
+   * captured.
+   * 
+   * If omitted, the component installs listeners to capture this event.
+   * Note: This component must be rendered as soon as possible in order to
+   * capture the event.
+   */
+  appInstalledEvent: PropTypes.shape({})
 };
