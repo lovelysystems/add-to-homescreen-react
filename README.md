@@ -354,6 +354,8 @@ Copyright (c) 2019 Chris Love, http://love2dev.com/
 
 Copyright (c) 2019, 2020 Axel Springer Ideas Engineering GmbH, https://ideas-engineering.io/
 
+Copyright (c) 2020 Lovely Systems GmbH, https://www.lovelysystems.com/
+
 This software is subject to the provisions of [LPGLv3](http://www.gnu.de/documents/lgpl-3.0.de.html).
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE
