@@ -1,6 +1,6 @@
 {
-  "name": "@ideasio/add-to-homescreen-react",
-  "version": "1.0.4",
+  "name": "@lovelysystems/add-to-homescreen-react",
+  "version": "1.1.0",
   "description": "A React component providing add-to-home-screen functionality for progressive webapps on different platforms and browsers.",
   "main": "build/AddToHomeScreen.js",
   "license": "LGPLv3",
