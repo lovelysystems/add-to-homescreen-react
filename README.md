@@ -71,6 +71,8 @@ Configuration is defined in the `addToHomeScreenConfiguration.json` file. The fo
 | customPromptContent | Allows customization of the custom prompt dialog's content. See section [Custom Prompt Content](#custom-prompt-content). | `{}` |
 | customPromptElements | Allows definition of your own CSS class for all HTML elements of the custom prompt dialog. See section [Customizing add-to-homescreen prompt](#customizing-add-to-homescreen-prompt). | |
 | customPromptPlatformDependencies | See section [Browser specific prompt dialog configuration](#browser-specific-prompt-dialog-configuration). | |
+| beforeInstallPromptEvent | (Optional) Provide a [BeforeInstallPromptEvent](https://developer.mozilla.org/en-US/docs/Web/API/BeforeInstallPromptEvent) which your app previously captured. | | 
+| appInstalledEvent | (Optional) Provide an [AppInstalledEvent](https://developer.mozilla.org/en-US/docs/Web/API/Window/appinstalled_event) which your app previously captured. | | 
 
 ## Custom Prompt Content
 
